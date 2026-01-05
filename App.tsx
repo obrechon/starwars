@@ -11,6 +11,7 @@ import {
   type Edge,
   type OnConnect,
   type Node,
+
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
@@ -30,31 +31,27 @@ const edgeTypes = {
   custom: CustomEdge,
 };
 
-const initialNodes = [
+const initialNodes: Node[] = [
   {
     id: '1',
-    label: '1',
     position: { x: -200, y: 0 },
     data: { label: 'Tatooine', handles: { right: true } },
     type: 'custom'
   },
   {
     id: '2',
-    label: '2',
     position: { x: -100, y: -200 },
     data: { label: 'Dagobah', handles: { bottom: true } },
     type: 'custom',
   },
   {
     id: '3',
-    label: '3',
     position: { x: 300, y: -200 },
     data: { label: 'Endor', handles: { left: true } },
     type: 'custom',
   },
   {
     id: '4',
-    label: '4',
     position: { x: 100, y: 200 },
     data: { label: 'Hoth', handles: { top: true } },
     type: 'custom',
@@ -145,8 +142,29 @@ const initialEdges = [
 const fitViewOptions = { padding: 4 };
 
 const NodeAsHandleFlow = () => {
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const onNodeDragStop = useCallback(
+    (_: React.MouseEvent, node: Node) => {
+      setNodes((nds) =>
+        nds.map((n) => {
+          if (n.id === node.id) {
+            // Create a new object to ensure a re-render
+            return {
+              ...n,
+              data: {
+                ...n.data,
+                label: `x: ${Math.round(node.position.x)}, y: ${Math.round(node.position.y)}`,
+              },
+            };
+          }
+          return n;
+        }),
+      );
+    },
+    [setNodes],
+  );
 
   const onConnect = useCallback(
     (params) =>
@@ -160,7 +178,7 @@ const NodeAsHandleFlow = () => {
           eds,
         ),
       ),
-    [],
+    [setEdges],
   );
 
   return (
@@ -168,7 +186,8 @@ const NodeAsHandleFlow = () => {
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChange}
+        onNodesChange={onNodesChange} 
+        onNodeDragStop={onNodeDragStop}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         edgeTypes={edgeTypes}
