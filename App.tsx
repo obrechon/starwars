@@ -58,160 +58,89 @@ const initialNodes: Node[] = [
   },
 ];
 
-const initialEdges = [
-  {
-    id: '1-2',
-    source: '1',
-    target: '2',
-    sourceHandle: 'b',
-    targetHandle: 'c',
+/**
+ * Calculates the Euclidean distance between two nodes.
+ * The formula is sqrt((x2-x1)^2 + (y2-y1)^2).
+ * @param node1 The first node.
+ * @param node2 The second node.
+ * @returns The distance between the two nodes.
+ */
+const calculateDistance = (node1: Node, node2: Node): number => {
+  const dx = node2.position.x - node1.position.x;
+  const dy = node2.position.y - node1.position.y;
+  return Math.sqrt(dx ** 2 + dy ** 2);
+};
+
+/**
+ * Creates an edge with a calculated travel time label.
+ * @param sourceNode The source node.
+ * @param targetNode The target node.
+ * @param sourceHandle The source handle id.
+ * @param targetHandle The target handle id.
+ * @returns A React Flow edge object.
+ */
+const createTravelEdge = (sourceNode: Node, targetNode: Node, sourceHandle: string, targetHandle: string): Edge => {
+  const distance = calculateDistance(sourceNode, targetNode);
+  const travelTime = Math.round(distance / 30);
+
+  return {
+    id: `${sourceNode.id}-${targetNode.id}`,
+    source: sourceNode.id,
+    target: targetNode.id,
+    sourceHandle,
+    targetHandle,
     deletable: false,
     reconnectable: false,
-    data: {
-      label: `${
-        Math.round(
-        (Math.sqrt(
-        ((Math.abs(initialNodes[0].position.x - initialNodes[1].position.x)) ** 2)
-        +
-        ((Math.abs(initialNodes[0].position.y - initialNodes[1].position.y)) **2 )))
-          /30
-      )
-      } days`
-    },
+    data: { label: `${travelTime} days` },
     type: 'custom',
-  },
-  {
-    id: '1-3',
-    source: '1',
-    target: '3',
-    sourceHandle: 'b',
-    targetHandle: 'd',
-    deletable: false,
-    reconnectable: false,
-    data: {
-      label: `${
-        Math.round(
-        (Math.sqrt(
-        ((Math.abs(initialNodes[0].position.x - initialNodes[2].position.x)) ** 2)
-        +
-        ((Math.abs(initialNodes[0].position.y - initialNodes[2].position.y)) **2 )))
-          /30
-      )
-      } days`
-    },
-    type: 'custom',
-  },
-  {
-    id: '1-4',
-    source: '1',
-    target: '4',
-    sourceHandle: 'b',
-    targetHandle: 'a',
-    deletable: false,
-    reconnectable: false,
-    data: {
-      label: `${
-        Math.round(
-        (Math.sqrt(
-        ((Math.abs(initialNodes[0].position.x - initialNodes[3].position.x)) ** 2)
-        +
-        ((Math.abs(initialNodes[0].position.y - initialNodes[3].position.y)) **2 )))
-          /30
-      )
-      } days`
-    },
-    type: 'custom',
-  },
-  {
-    id: '2-4',
-    source: '2',
-    target: '4',
-    sourceHandle: 'c',
-    targetHandle: 'a',
-    deletable: false,
-    reconnectable: false,
-    data: {
-      label: `${
-        Math.round(
-        (Math.sqrt(
-        ((Math.abs(initialNodes[1].position.x - initialNodes[3].position.x)) ** 2)
-        +
-        ((Math.abs(initialNodes[1].position.y - initialNodes[3].position.y)) **2 )))
-          /30
-      )
-      } days`
-    },
-    type: 'custom',
-  },
-  {
-    id: '2-3',
-    source: '2',
-    target: '3',
-    sourceHandle: 'c',
-    targetHandle: 'd',
-    deletable: false,
-    reconnectable: false,
-    data: {
-      label: `${
-        Math.round(
-        (Math.sqrt(
-        ((Math.abs(initialNodes[1].position.x - initialNodes[2].position.x)) ** 2)
-        +
-        ((Math.abs(initialNodes[1].position.y - initialNodes[2].position.y)) **2 )))
-          /30
-      )
-      } days`
-    },
-    type: 'custom',
-  },
-  {
-    id: '3-4',
-    source: '3',
-    target: '4',
-    sourceHandle: 'd',
-    targetHandle: 'a',
-    deletable: false,
-    reconnectable: false,
-    data: {
-      label: `${
-        Math.round(
-        (Math.sqrt(
-        ((Math.abs(initialNodes[2].position.x - initialNodes[3].position.x)) ** 2)
-        +
-        ((Math.abs(initialNodes[2].position.y - initialNodes[3].position.y)) **2 )))
-          /30
-      )
-      } days`
-    },
-    type: 'custom',
-  }
+  };
+};
+
+const initialEdges: Edge[] = [
+  createTravelEdge(initialNodes[0], initialNodes[1], 'b', 'c'), // 1-2
+  createTravelEdge(initialNodes[0], initialNodes[2], 'b', 'd'), // 1-3
+  createTravelEdge(initialNodes[0], initialNodes[3], 'b', 'a'), // 1-4
+  createTravelEdge(initialNodes[1], initialNodes[3], 'c', 'a'), // 2-4
+  createTravelEdge(initialNodes[1], initialNodes[2], 'c', 'd'), // 2-3
+  createTravelEdge(initialNodes[2], initialNodes[3], 'd', 'a'), // 3-4
 ];
 
 const fitViewOptions = { padding: 4 };
 
 const NodeAsHandleFlow = () => {
-  const [nodes, setNodes , onNodesChange] = useNodesState(initialNodes);
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onNodeDragStop = useCallback(
-    (_: React.MouseEvent, node: Node) => {
-      setNodes((nds) =>
-        nds.map((n) => {
-          if (n.id === node.id) {
-            // Create a new object to ensure a re-render
+    (_: React.MouseEvent, __: Node, nodes: Node[]) => {
+      // Create a Map for efficient node lookup by ID
+      const nodesById = new Map(nodes.map((n) => [n.id, n]));
+
+      setEdges((currentEdges) =>
+        currentEdges.map((edge) => {
+          const sourceNode = nodesById.get(edge.source);
+          const targetNode = nodesById.get(edge.target);
+
+          // This should always be true in a connected graph
+          if (sourceNode && targetNode) {
+            const distance = calculateDistance(sourceNode, targetNode);
+            const travelTime = Math.round(distance / 30);
+
+            // Return a new edge object to ensure re-rendering
             return {
-              ...n,
+              ...edge,
               data: {
-                ...n.data,
-                label: `x: ${Math.round(node.position.x)}, y: ${Math.round(node.position.y)}`,
+                ...edge.data,
+                label: `${travelTime} days`,
               },
             };
           }
-          return n;
-        }),
+
+          return edge;
+        })
       );
     },
-    [setNodes]
+    [setEdges]
   );
 
   const onConnect = useCallback(
