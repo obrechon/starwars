@@ -68,7 +68,15 @@ const initialEdges = [
     deletable: false,
     reconnectable: false,
     data: {
-      label: '4 days',
+      label: `${
+        Math.round(
+        (Math.sqrt(
+        ((Math.abs(initialNodes[0].position.x - initialNodes[1].position.x)) ** 2)
+        +
+        ((Math.abs(initialNodes[0].position.y - initialNodes[1].position.y)) **2 )))
+          /30
+      )
+      } days`
     },
     type: 'custom',
   },
@@ -81,7 +89,15 @@ const initialEdges = [
     deletable: false,
     reconnectable: false,
     data: {
-      label: '4 days',
+      label: `${
+        Math.round(
+        (Math.sqrt(
+        ((Math.abs(initialNodes[0].position.x - initialNodes[2].position.x)) ** 2)
+        +
+        ((Math.abs(initialNodes[0].position.y - initialNodes[2].position.y)) **2 )))
+          /30
+      )
+      } days`
     },
     type: 'custom',
   },
@@ -94,7 +110,15 @@ const initialEdges = [
     deletable: false,
     reconnectable: false,
     data: {
-      label: '4 days',
+      label: `${
+        Math.round(
+        (Math.sqrt(
+        ((Math.abs(initialNodes[0].position.x - initialNodes[3].position.x)) ** 2)
+        +
+        ((Math.abs(initialNodes[0].position.y - initialNodes[3].position.y)) **2 )))
+          /30
+      )
+      } days`
     },
     type: 'custom',
   },
@@ -107,7 +131,15 @@ const initialEdges = [
     deletable: false,
     reconnectable: false,
     data: {
-      label: '4 days',
+      label: `${
+        Math.round(
+        (Math.sqrt(
+        ((Math.abs(initialNodes[1].position.x - initialNodes[3].position.x)) ** 2)
+        +
+        ((Math.abs(initialNodes[1].position.y - initialNodes[3].position.y)) **2 )))
+          /30
+      )
+      } days`
     },
     type: 'custom',
   },
@@ -120,7 +152,15 @@ const initialEdges = [
     deletable: false,
     reconnectable: false,
     data: {
-      label: '4 days',
+      label: `${
+        Math.round(
+        (Math.sqrt(
+        ((Math.abs(initialNodes[1].position.x - initialNodes[2].position.x)) ** 2)
+        +
+        ((Math.abs(initialNodes[1].position.y - initialNodes[2].position.y)) **2 )))
+          /30
+      )
+      } days`
     },
     type: 'custom',
   },
@@ -133,7 +173,15 @@ const initialEdges = [
     deletable: false,
     reconnectable: false,
     data: {
-      label: '4 days',
+      label: `${
+        Math.round(
+        (Math.sqrt(
+        ((Math.abs(initialNodes[2].position.x - initialNodes[3].position.x)) ** 2)
+        +
+        ((Math.abs(initialNodes[2].position.y - initialNodes[3].position.y)) **2 )))
+          /30
+      )
+      } days`
     },
     type: 'custom',
   }
@@ -163,7 +211,7 @@ const NodeAsHandleFlow = () => {
         }),
       );
     },
-    [setNodes],
+    [setNodes]
   );
 
   const onConnect = useCallback(
