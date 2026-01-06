@@ -22,7 +22,7 @@ import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
 import Sidebar from './ui/Sidebar';
 
-import './index.css';
+import './global.css';
 
 const nodeTypes = {
   custom: CustomNode,
