@@ -7,9 +7,7 @@ import {
   useEdgesState,
   MarkerType,
   ConnectionMode,
-  type EdgeTypes,
   type Edge,
-  type OnConnect,
   type Node,
 } from '@xyflow/react';
 
@@ -22,6 +20,7 @@ import '@xyflow/react/dist/style.css';
 import SimpleFloatingEdge from './SimpleFloatingEdge';
 import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
+import Sidebar from './ui/Sidebar';
 
 import './index.css';
 
@@ -41,20 +40,28 @@ const NodeAsHandleFlow = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const updateEdgeLabels = useCallback((currentNodes: Node[], currentEdges: Edge[]) => {
+    let changed = false;
     const updatedEdges = currentEdges.map((edge) => {
       const sourceNode = currentNodes.find((node) => node.id === edge.source);
       const targetNode = currentNodes.find((node) => node.id === edge.target);
 
       if (sourceNode && targetNode) {
         const days = calculateDistance(edge, sourceNode, targetNode);
+        if (edge.data?.label !== days) {
+          changed = true;
+        }
         return { ...edge, data: { ...edge.data, label: days } };
       }
       return edge;
     });
-    setEdges(updatedEdges);
+
+    if (changed) setEdges(updatedEdges);
   }, [setEdges]);
 
-  
+  useEffect(() => {
+    updateEdgeLabels(nodes, edges);
+  }, [nodes, edges, updateEdgeLabels]);
+
   return (
     <div className="simple-floatingedges">
       <ReactFlow
