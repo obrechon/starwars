@@ -6,7 +6,7 @@ export const initialNodes: Node[] = [
   {
     id: '1',
     position: { x: -300, y: 0 },
-    data: { label: 'Tatooine ☠️', handles: { right: true }, style: { width: 100, height: 100, borderColor: 'white', backgroundColor: 'black', color: 'white'} },
+    data: { label: 'Tatooine', handles: { right: true }, style: { width: 100, height: 100, borderColor: 'white', backgroundColor: 'black', color: 'white'} },
     type: 'custom'
   },
   {
@@ -18,7 +18,7 @@ export const initialNodes: Node[] = [
   {
     id: '3',
     position: { x: 400, y: -200 },
-    data: { label: 'Endor ☠️', handles: { left: true }, style: { width: 280, height: 280, backgroundColor: '#A1CEC6', color: '#48615F'} },
+    data: { label: 'Endor', handles: { left: true }, style: { width: 280, height: 280, backgroundColor: '#A1CEC6', color: '#48615F'} },
     type: 'custom',
   },
   {
