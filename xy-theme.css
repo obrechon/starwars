@@ -1,12 +1,17 @@
 /* xyflow theme files. Delete these to start from our base */
 
 .react-flow {
-  --xy-background-color: #f7f9fb;
+  --xy-background-color: black;
   /* Custom Variables */
   --xy-theme-selected: #f57dbd;
   --xy-theme-hover: #c5c5c5;
   --xy-theme-edge-hover: black;
   --xy-theme-color-focus: #e8e8e8;
+  --xy-background-pattern-dots-color-default: transparent;
+  --xy-edge-stroke-default: yellow;
+  --xy-edge-stroke-hover: yellow;
+  --xy-edge-stroke-width-default: 0.5;
+  --xy-edge-stroke-selected-default: yellow;
 
   /* Built-in Variables see https://reactflow.dev/learn/customization/theming */
   --xy-node-border-default: 1px solid #ededed;
@@ -15,9 +20,9 @@
     0px 3.54px 4.55px 0px #00000005, 0px 3.54px 4.55px 0px #0000000d,
     0px 0.51px 1.01px 0px #0000001a;
 
-  --xy-node-border-radius-default: 8px;
+  --xy-node-border-radius-default: 100%;
 
-  --xy-handle-background-color-default: #ffffff;
+  --xy-handle-background-color-default: transparent;
   --xy-handle-border-color-default: #aaaaaa;
 
   --xy-edge-label-color-default: #505050;
@@ -41,8 +46,7 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 10px;
-  font-size: 12px;
+  font-size: 16px;
   flex-direction: column;
   border: var(--xy-node-border-default);
   color: var(--xy-node-color, var(--xy-node-color-default));

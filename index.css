@@ -42,8 +42,10 @@ body {
 
 .edge-label-renderer__custom-edge {
   position: absolute;
-  padding: 1px;
-  border-radius: 5px;
+  padding: 4px;
+  border-radius: 0px 5px 5px 5px;
   font-size: 12px;
   font-weight: 500;
+  color: black;
+  background-color: yellow;
 }
