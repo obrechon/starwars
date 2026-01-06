@@ -27,4 +27,10 @@ export const initialNodes: Node[] = [
     data: { label: 'Hoth ☠️', handles: { top: true }, style: { width: 75, height: 75, backgroundColor: '#434648ff', color: '#b3d5d6ff'} },
     type: 'custom',
   },
+  {
+    id: '5',
+    position: { x: 750, y: -60 },
+    data: { label: 'death star', handles: { top: true }, style: { width: 50, height: 50, backgroundColor: 'black', color: 'white'} },
+    type: 'custom',
+  },
 ];

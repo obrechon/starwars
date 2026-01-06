@@ -72,7 +72,7 @@ body {
   --xy-edge-stroke-selected-default: yellow;
 
   /* Built-in Variables see https://reactflow.dev/learn/customization/theming */
-  --xy-node-border-default: 1px solid #ededed;
+  --xy-node-border-default: 1px solid black;
 
   --xy-node-boxshadow-default:
     0px 3.54px 4.55px 0px #00000005, 0px 3.54px 4.55px 0px #0000000d,
