@@ -58,27 +58,12 @@ const initialNodes: Node[] = [
   },
 ];
 
-/**
- * Calculates the Euclidean distance between two nodes.
- * The formula is sqrt((x2-x1)^2 + (y2-y1)^2).
- * @param node1 The first node.
- * @param node2 The second node.
- * @returns The distance between the two nodes.
- */
 const calculateDistance = (node1: Node, node2: Node): number => {
   const dx = node2.position.x - node1.position.x;
   const dy = node2.position.y - node1.position.y;
   return Math.sqrt(dx ** 2 + dy ** 2);
 };
 
-/**
- * Creates an edge with a calculated travel time label.
- * @param sourceNode The source node.
- * @param targetNode The target node.
- * @param sourceHandle The source handle id.
- * @param targetHandle The target handle id.
- * @returns A React Flow edge object.
- */
 const createTravelEdge = (sourceNode: Node, targetNode: Node, sourceHandle: string, targetHandle: string): Edge => {
   const distance = calculateDistance(sourceNode, targetNode);
   const travelTime = Math.round(distance / 30);
@@ -112,37 +97,8 @@ const NodeAsHandleFlow = () => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const onNodeDragStop = useCallback(
-    (_: React.MouseEvent, __: Node, nodes: Node[]) => {
-      // Create a Map for efficient node lookup by ID
-      const nodesById = new Map(nodes.map((n) => [n.id, n]));
+  const onNodeDragStop = useCallback()
 
-      setEdges((currentEdges) =>
-        currentEdges.map((edge) => {
-          const sourceNode = nodesById.get(edge.source);
-          const targetNode = nodesById.get(edge.target);
-
-          // This should always be true in a connected graph
-          if (sourceNode && targetNode) {
-            const distance = calculateDistance(sourceNode, targetNode);
-            const travelTime = Math.round(distance / 30);
-
-            // Return a new edge object to ensure re-rendering
-            return {
-              ...edge,
-              data: {
-                ...edge.data,
-                label: `${travelTime} days`,
-              },
-            };
-          }
-
-          return edge;
-        })
-      );
-    },
-    [setEdges]
-  );
 
   const onConnect = useCallback(
     (params) =>
