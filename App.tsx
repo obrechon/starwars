@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ReactFlow,
   addEdge,
@@ -11,11 +11,11 @@ import {
   type Edge,
   type OnConnect,
   type Node,
-
 } from '@xyflow/react';
 
 import { initialNodes } from './lib/initial-nodes';
 import { initialEdges } from './lib/initial-edges';
+import { calculateDistance } from './lib/actions';
 
 import '@xyflow/react/dist/style.css';
 
@@ -37,14 +37,30 @@ const edgeTypes = {
 const fitViewOptions = { padding: 1 };
 
 const NodeAsHandleFlow = () => {
-  const [nodes] = useState(initialNodes);
-  const [edges] = useState(initialEdges);
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
+  const updateEdgeLabels = useCallback((currentNodes: Node[], currentEdges: Edge[]) => {
+    const updatedEdges = currentEdges.map((edge) => {
+      const sourceNode = currentNodes.find((node) => node.id === edge.source);
+      const targetNode = currentNodes.find((node) => node.id === edge.target);
+
+      if (sourceNode && targetNode) {
+        const days = calculateDistance(edge, sourceNode, targetNode);
+        return { ...edge, data: { ...edge.data, label: days } };
+      }
+      return edge;
+    });
+    setEdges(updatedEdges);
+  }, [setEdges]);
+
+  
   return (
     <div className="simple-floatingedges">
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        onNodesChange={onNodesChange} 
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
         fitView
