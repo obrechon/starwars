@@ -13,7 +13,7 @@ import {
 
 import { initialNodes } from './lib/initial-nodes';
 import { initialEdges } from './lib/initial-edges';
-import { calculateDistance, findNextSteps, findPossiblePaths } from './lib/actions';
+import { calculateDistance, findBestPath, findFirstsSteps, findNextSteps } from './lib/actions';
 
 import '@xyflow/react/dist/style.css';
 
@@ -61,12 +61,7 @@ const NodeAsHandleFlow = () => {
 
   useEffect(() => {
     updateEdgeLabels(nodes, edges);
-    console.log(
-      findPossiblePaths('1', edges, fuel)
-    )
-
-
-
+    console.log(findFirstsSteps(edges, fuel))
   }, [nodes, edges, updateEdgeLabels]);
 
 
