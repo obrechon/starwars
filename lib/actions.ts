@@ -13,17 +13,17 @@ export function calculateDistance(edge: Edge, node1: Node, node2: Node) {
   return travelTime;
 }
 
-export function findFirstsSteps(edges: Edge[], fuel: number): Edge[] {
-  const firstSteps: Edge[] = [];
+export function possiblePaths(edges: Edge[], fuel: number): Edge[] {
+  const pathsNotTooLong: Edge[] = [];
 
   for (const e of edges) {
-    const isConnected = e.source === '1' || e.target === '1';
     const cost = e.data?.label ? Number(e.data.label) : Infinity;
-    if (isConnected && fuel >= cost) {
-      firstSteps.push(e);
+    if (fuel >= cost) {
+    pathsNotTooLong.push(e)
     }
-  }  
+  }
+  return pathsNotTooLong
 
-  return firstSteps;
+  }
 
-}
+ 
