@@ -13,7 +13,7 @@ import {
 
 import { initialNodes } from './lib/initial-nodes';
 import { initialEdges } from './lib/initial-edges';
-import { calculateDistance, findBestPath, findNextSteps } from './lib/actions';
+import { calculateDistance, findNextSteps, findPossiblePaths } from './lib/actions';
 
 import '@xyflow/react/dist/style.css';
 
@@ -38,7 +38,7 @@ const fitViewOptions = { padding: 1 };
 const NodeAsHandleFlow = () => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [fuel, setFuel] = useState(15);
+  const [fuel, setFuel] = useState(10);
 
   const updateEdgeLabels = useCallback((currentNodes: Node[], currentEdges: Edge[]) => {
     let changed = false;
@@ -61,7 +61,12 @@ const NodeAsHandleFlow = () => {
 
   useEffect(() => {
     updateEdgeLabels(nodes, edges);
-    console.log(findNextSteps('1', edges, fuel))
+    console.log(
+      findPossiblePaths('1', edges, fuel)
+    )
+
+
+
   }, [nodes, edges, updateEdgeLabels]);
 
 
