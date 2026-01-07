@@ -14,16 +14,29 @@ export function calculateDistance(edge: Edge, node1: Node, node2: Node) {
 }
 
 export function possiblePaths(edges: Edge[], fuel: number): Edge[] {
-  const pathsNotTooLong: Edge[] = [];
+  const affordableEdges: Edge[] = [];
+  const affordableFirstEdges: Edge[] = [];
 
   for (const e of edges) {
     const cost = e.data?.label ? Number(e.data.label) : Infinity;
     if (fuel >= cost) {
-    pathsNotTooLong.push(e)
+      affordableEdges.push(e);
     }
   }
-  return pathsNotTooLong
-
+  
+  for (const e of affordableEdges) {
+    if ((e.target || e.source) === '2') {
+      affordableFirstEdges.push(e);      
+    }
   }
+
+  return affordableFirstEdges;
+  return edges
+    .filter(edge => {
+      const cost = edge.data?.label ? Number(edge.data.label) : Infinity;
+      return fuel >= cost;
+    })
+    .filter(edge => edge.source === '2' || edge.target === '2');
+}
 
  
