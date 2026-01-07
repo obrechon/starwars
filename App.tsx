@@ -13,7 +13,7 @@ import {
 
 import { initialNodes } from './lib/initial-nodes';
 import { initialEdges } from './lib/initial-edges';
-import { calculateDistance } from './lib/actions';
+import { calculateDistance, findBestPath } from './lib/actions';
 
 import '@xyflow/react/dist/style.css';
 
@@ -61,6 +61,10 @@ const NodeAsHandleFlow = () => {
   useEffect(() => {
     updateEdgeLabels(nodes, edges);
   }, [nodes, edges, updateEdgeLabels]);
+
+  useEffect(() => {
+    findBestPath(edges, 12)
+  })
 
   return (
     <div className="simple-floatingedges">
