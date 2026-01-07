@@ -22,6 +22,8 @@ export function findNextSteps(currentStep:string, edges: Edge[], fuel: number): 
     if (isConnected && fuel >= cost) {
       nextSteps.push(e);
     }
-  }
+  }  
+
   return nextSteps;
+
 }

@@ -80,18 +80,5 @@ export const initialEdges: Edge[] = [
       label: '?',
     },
     type: 'custom',
-  },
-  {
-    id: '4-5',
-    source: '4',
-    target: '5',
-    sourceHandle: 'd',
-    targetHandle: 'a',
-    deletable: false,
-    reconnectable: false,
-    data: {
-      label: '?',
-    },
-    type: 'custom',
   }
 ];
