@@ -69,6 +69,7 @@ body {
   --xy-edge-stroke-default: yellow;
   --xy-edge-stroke-hover: yellow;
   --xy-edge-stroke-width-default: 0.5;
+  --xy-edge-stroke-width-highlight: 3;
   --xy-edge-stroke-selected-default: yellow;
 
   /* Built-in Variables see https://reactflow.dev/learn/customization/theming */

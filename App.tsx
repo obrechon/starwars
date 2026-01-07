@@ -13,7 +13,7 @@ import {
 
 import { initialNodes } from './lib/initial-nodes';
 import { initialEdges } from './lib/initial-edges';
-import { calculateDistance, findBestPath } from './lib/actions';
+import { calculateDistance, createHighlightedPath, findBestPath } from './lib/actions';
 
 import '@xyflow/react/dist/style.css';
 
@@ -36,42 +36,45 @@ const edgeTypes = {
 const fitViewOptions = { padding: 1 };
 
 const NodeAsHandleFlow = () => {
+  const fuel:number = 10;
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const updateEdgeLabels = useCallback((currentNodes: Node[], currentEdges: Edge[]) => {
-    let changed = false;
-    const updatedEdges = currentEdges.map((edge) => {
+  const updateEdgeLabels = useCallback((currentNodes: Node[], currentEdges: Edge[]): Edge[] => {
+    return currentEdges.map((edge) => {
       const sourceNode = currentNodes.find((node) => node.id === edge.source);
       const targetNode = currentNodes.find((node) => node.id === edge.target);
 
       if (sourceNode && targetNode) {
         const days = calculateDistance(edge, sourceNode, targetNode);
-        if (edge.data?.label !== days) {
-          changed = true;
-        }
         return { ...edge, data: { ...edge.data, label: days } };
       }
       return edge;
     });
-
-    if (changed) setEdges(updatedEdges);
   }, [setEdges]);
 
-  useEffect(() => {
+  useEffect(() => { 
+    // First, update all edge labels with the current distances
     updateEdgeLabels(nodes, edges);
-  }, [nodes, edges, updateEdgeLabels]);
 
-  useEffect(() => {
-    findBestPath(edges, 12)
-  })
+    // Then, find the best path using these up-to-date edges
+    // findBestPath(edges, fuel);
+    // console.log(findBestPath(edges, fuel))
+
+    // // Finally, create a new set of edges with the path highlighted
+    // const highlightedEdges = createHighlightedPath(edgesWithUpdatedLabels, path);
+
+    // // Update the state to render the changes
+    // setEdges(highlightedEdges);
+    // console.log(highlightedEdges)
+  }, [nodes, fuel, setEdges]);
 
   return (
     <div className="simple-floatingedges">
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChange} 
+        onNodesChange={onNodesChange}
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
         fitView
