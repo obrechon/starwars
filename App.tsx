@@ -150,34 +150,46 @@ const NodeAsHandleFlow = () => {
     setEmpireWinning(true)
   }, visibleEdges);
 
-  const handleNodeDragStart = useCallback(() => {
-    // Start music on the first drag interaction if it's not already playing.
+  const startMusicOnInteraction = useCallback(() => {
+    // Start music on user interaction if it's not already playing.
     if (!isMusicPlaying) {
       setIsMusicPlaying(true);
     }
-  }, [isMusicPlaying, setIsMusicPlaying]);
+  }, [isMusicPlaying]);
+
+  const toggleMusic = useCallback(() => {
+    setIsMusicPlaying(prev => !prev);
+  }, []);
 
   return (
     <div className="simple-floatingedges flex flex-col h-screen">
       <AudioPlayer src="/star-wars-theme.mp3" isPlaying={isMusicPlaying} />
-        <ReactFlow
+        <ReactFlow 
           nodes={nodes}
           edges={visibleEdges}
           onNodesChange={onNodesChange}
-          onNodeDragStart={handleNodeDragStart}
+          onNodeDragStart={startMusicOnInteraction}
+          onPaneClick={startMusicOnInteraction}
           edgeTypes={edgeTypes}
           nodeTypes={nodeTypes}
           fitView
           fitViewOptions={fitViewOptions}
           connectionMode={ConnectionMode.Loose}
+          className="bg-teal-50"
         >
-          <Panel position="bottom-left">bottom-left</Panel>
+          <Panel position="top-right">
+
+          </Panel>
           <Controls showInteractive={false} />
           <Background />
 
         </ReactFlow>      
-        <div className="bg-yellow-400 h-4">
-        </div>
+        <div className="bg-yellow-400 h-40 w-full">
+          <button onClick={toggleMusic} className="w-5 bg-gray-200/80 p-2 rounded text-black">
+              {isMusicPlaying ? 'Pause Music' : 'Play Music'}
+          </button>
+        </div>          
+
     </div>
   );
 };
