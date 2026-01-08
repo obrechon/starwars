@@ -36,7 +36,7 @@ const edgeTypes = {
 const fitViewOptions = { padding: 1 };
 
 const NodeAsHandleFlow = () => {
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [allEdges, setAllEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [empireWinning, setEmpireWinning] = useState(true);
   const [fuel, setFuel] = useState(10);
@@ -113,9 +113,28 @@ const NodeAsHandleFlow = () => {
     setAllEdges((eds) => {
       if (eds.some((e) => e.id === '3-5')) return eds;
       return [...eds, rebelShot];
-    });
-  }, [empireWinning, setAllEdges]);
+      });
 
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === '3') {
+          const newBackgroundColor = empireWinning ? '#000000ff' : '#A1CEC6';
+          return {
+            ...node,
+            data: { ...node.data, style: { ...node.data.style, backgroundColor: newBackgroundColor } },
+          };
+        }
+        if (node.id === '5') {
+          const newBackgroundColor = empireWinning ? '#8e8484ff' : '#000000ff';
+          return {
+            ...node,
+            data: { ...node.data, style: { ...node.data.style, backgroundColor: newBackgroundColor } },
+          };
+        }
+        return node;
+      })
+    );
+  }, [empireWinning, setAllEdges, setNodes]);
 
   return (
     <div className="simple-floatingedges">

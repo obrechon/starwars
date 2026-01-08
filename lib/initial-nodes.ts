@@ -30,7 +30,7 @@ export const initialNodes: Node[] = [
   {
     id: '5',
     position: { x: 850, y: -150 },
-    data: { label: 'death star', handles: { left: true }, style: { width: 70, height: 70, backgroundColor: 'black', color: 'white'} },
+    data: { label: 'death star', handles: { left: true }, style: { width: 70, height: 70, backgroundColor: '#8e8484ff', color: 'white'} },
     type: 'custom',
   },
 ];
