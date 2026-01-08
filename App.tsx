@@ -83,7 +83,7 @@ const NodeAsHandleFlow = () => {
       type: 'custom',
       animated:true,
       data: {
-        label: 'Empire wins!!!',
+        label: '🔫 Empire wins!!!',
       }
     }
 
@@ -98,7 +98,7 @@ const NodeAsHandleFlow = () => {
       type: 'custom',
       animated:true,
       data: {
-        label: 'Rebels win!!!',
+        label: '🚀 Rebels win!!!',
       }
     }
 
