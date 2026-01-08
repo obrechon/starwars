@@ -13,7 +13,7 @@ import {
 
 import { initialNodes } from './lib/initial-nodes';
 import { initialEdges } from './lib/initial-edges';
-import { calculateDistance, findBestPath, findFirstsSteps, findNextSteps, possiblePaths } from './lib/actions';
+import { calculateDistance, possiblePaths } from './lib/actions';
 
 import '@xyflow/react/dist/style.css';
 
@@ -37,40 +37,44 @@ const fitViewOptions = { padding: 1 };
 
 const NodeAsHandleFlow = () => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [allEdges, setAllEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [fuel, setFuel] = useState(10);
 
-  const updateEdgeLabels = useCallback((currentNodes: Node[], currentEdges: Edge[]) => {
-    let changed = false;
-    const updatedEdges = currentEdges.map((edge) => {
-      const sourceNode = currentNodes.find((node) => node.id === edge.source);
-      const targetNode = currentNodes.find((node) => node.id === edge.target);
+  // 2. This effect runs once to calculate the cost for every edge.
+  useEffect(() => {
+    const edgesWithCosts = allEdges.map((edge) => {
+      const sourceNode = nodes.find((node) => node.id === edge.source);
+      const targetNode = nodes.find((node) => node.id === edge.target);
 
       if (sourceNode && targetNode) {
-        const days = calculateDistance(edge, sourceNode, targetNode);
-        if (edge.data?.label !== days) {
-          changed = true;
-        }
-        return { ...edge, data: { ...edge.data, label: days } };
+        const cost = calculateDistance(edge, sourceNode, targetNode);
+        return { ...edge, data: { ...edge.data, label: cost } };
       }
       return edge;
     });
+    setAllEdges(edgesWithCosts);
+    // We only want this to run once on mount, so we have a limited dependency array.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nodes, setAllEdges]);
 
-    if (changed) setEdges(updatedEdges);
-  }, [setEdges]);
+  // 3. Derive the edges to display by filtering allEdges based on fuel.
+  // This is not a state update, it's calculated on every render. No loop!
+  const visibleEdges = allEdges.filter(edge => {
+    // Edges with a non-numeric label (like '?') are treated as infinitely expensive.
+    const cost = edge.data?.label ? Number(edge.data.label) : Infinity;
+    return cost < fuel;
+  });
 
+  // This effect now safely uses the derived `visibleEdges`.
   useEffect(() => {
-    updateEdgeLabels(nodes, edges);
-    console.log(possiblePaths(edges, fuel))
-  }, [nodes, edges, updateEdgeLabels]);
-
-
+    console.log(possiblePaths(visibleEdges, fuel));
+  }, [visibleEdges, fuel]);
 
   return (
     <div className="simple-floatingedges">
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={visibleEdges}
         onNodesChange={onNodesChange} 
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
