@@ -102,30 +102,34 @@ const NodeAsHandleFlow = () => {
       }
     }
 
-    empireWinning ? 
-      setAllEdges((eds) => {
-        if (eds.some((e) => e.id === '5-3')) return eds;
-        return [...eds, empireShot];
-      }) :
     setAllEdges((eds) => {
-      if (eds.some((e) => e.id === '3-5')) return eds;
-      return [...eds, rebelShot];
-      });
+      const filteredEdges = eds.filter((e) => e.id !== '5-3' && e.id !== '3-5');
+      if (empireWinning) {
+        return [...filteredEdges, empireShot];
+      }
+      return [...filteredEdges, rebelShot];
+    });
 
     setNodes((nds) =>
       nds.map((node) => {
         if (node.id === '3') {
           const newBackgroundColor = empireWinning ? '#000000ff' : '#A1CEC6';
+          const newColor = empireWinning ? '#e8e8e8ff' : '#292929ff';
+          const newLabel = empireWinning ? 'Endor ☠️' : 'Endor';
+          
           return {
             ...node,
-            data: { ...node.data, style: { ...node.data.style, backgroundColor: newBackgroundColor } },
+            data: { ...node.data, label: newLabel, style: { ...node.data.style, color: newColor, backgroundColor: newBackgroundColor } },
           };
         }
         if (node.id === '5') {
           const newBackgroundColor = empireWinning ? '#8e8484ff' : '#000000ff';
+          const newColor = empireWinning ? '#000000ff' : '#A1CEC6';
+          const newLabel = empireWinning ? 'Death star' : 'Death star ☠️';
+
           return {
             ...node,
-            data: { ...node.data, style: { ...node.data.style, backgroundColor: newBackgroundColor } },
+            data: { ...node.data, label: newLabel, style: { ...node.data.style, color: newColor, backgroundColor: newBackgroundColor } },
           };
         }
         return node;
