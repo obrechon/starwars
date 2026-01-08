@@ -21,6 +21,7 @@ import SimpleFloatingEdge from './SimpleFloatingEdge';
 import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
 import Sidebar from './ui/Sidebar';
+import AudioPlayer from './AudioPlayer';
 
 import './global.css';
 
@@ -40,6 +41,9 @@ const NodeAsHandleFlow = () => {
   const [allEdges, setAllEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [empireWinning, setEmpireWinning] = useState(true);
   const [fuel, setFuel] = useState(10);
+  // Start with music paused to comply with browser autoplay policies.
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+
   const visibleEdges = allEdges.filter(edge => {
     if (edge.id === '5-3' || edge.id === '3-5') {
       return true;
@@ -143,12 +147,21 @@ const NodeAsHandleFlow = () => {
     setEmpireWinning(true)
   }, visibleEdges);
 
+  const handleNodeDragStart = useCallback(() => {
+    // Start music on the first drag interaction if it's not already playing.
+    if (!isMusicPlaying) {
+      setIsMusicPlaying(true);
+    }
+  }, [isMusicPlaying, setIsMusicPlaying]);
+
   return (
     <div className="simple-floatingedges">
+      <AudioPlayer src="/star-wars-theme.mp3" isPlaying={isMusicPlaying} />
       <ReactFlow
         nodes={nodes}
         edges={visibleEdges}
-        onNodesChange={onNodesChange} 
+        onNodesChange={onNodesChange}
+        onNodeDragStart={handleNodeDragStart}
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
         fitView
