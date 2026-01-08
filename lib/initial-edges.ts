@@ -69,7 +69,7 @@ export const initialEdges: Edge[] = [
     type: 'custom',
   },
   {
-    id: '3-4',
+    id: '4-3',
     source: '3',
     target: '4',
     sourceHandle: 'd',

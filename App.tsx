@@ -38,37 +38,84 @@ const fitViewOptions = { padding: 1 };
 const NodeAsHandleFlow = () => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [allEdges, setAllEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [empireWinning, setEmpireWinning] = useState(true);
   const [fuel, setFuel] = useState(10);
 
-  // 2. This effect runs once to calculate the cost for every edge.
+
+
   useEffect(() => {
     const edgesWithCosts = allEdges.map((edge) => {
       const sourceNode = nodes.find((node) => node.id === edge.source);
       const targetNode = nodes.find((node) => node.id === edge.target);
 
-      if (sourceNode && targetNode) {
+      if (sourceNode && targetNode && edge.id !== '5-3' && edge.id !== '3-5') {
         const cost = calculateDistance(edge, sourceNode, targetNode);
-        return { ...edge, data: { ...edge.data, label: cost } };
+
+        const new_data = { ...edge.data, label: cost };
+        return { ...edge, data: new_data };
       }
       return edge;
     });
     setAllEdges(edgesWithCosts);
-    // We only want this to run once on mount, so we have a limited dependency array.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes, setAllEdges]);
+  }, [nodes, allEdges.length]);
 
-  // 3. Derive the edges to display by filtering allEdges based on fuel.
-  // This is not a state update, it's calculated on every render. No loop!
   const visibleEdges = allEdges.filter(edge => {
-    // Edges with a non-numeric label (like '?') are treated as infinitely expensive.
+    if (edge.id === '5-3' || edge.id === '3-5') {
+      return true;
+    }
     const cost = edge.data?.label ? Number(edge.data.label) : Infinity;
     return cost < fuel;
   });
 
-  // This effect now safely uses the derived `visibleEdges`.
+
   useEffect(() => {
     console.log(possiblePaths(visibleEdges, fuel));
   }, [visibleEdges, fuel]);
+
+
+  useEffect(() => {
+
+    const empireShot = {
+      id: '5-3',
+      source: '5',
+      target: '3',
+      sourceHandle: 'd',
+      targetHandle: 'b',
+      deletable: false,
+      reconnectable: false,
+      type: 'custom',
+      animated:true,
+      data: {
+        label: 'Empire wins!!!',
+      }
+    }
+
+    const rebelShot = {
+      id: '3-5',
+      source: '3',
+      target: '5',
+      sourceHandle: 'b',
+      targetHandle: 'd',
+      deletable: false,
+      reconnectable: false,
+      type: 'custom',
+      animated:true,
+      data: {
+        label: 'Rebels win!!!',
+      }
+    }
+
+    empireWinning ? 
+      setAllEdges((eds) => {
+        if (eds.some((e) => e.id === '5-3')) return eds;
+        return [...eds, empireShot];
+      }) :
+    setAllEdges((eds) => {
+      if (eds.some((e) => e.id === '3-5')) return eds;
+      return [...eds, rebelShot];
+    });
+  }, [empireWinning, setAllEdges]);
+
 
   return (
     <div className="simple-floatingedges">
@@ -81,7 +128,6 @@ const NodeAsHandleFlow = () => {
         fitView
         fitViewOptions={fitViewOptions}
         connectionMode={ConnectionMode.Loose}
-        // isConnectable={false}
       >
         <Background />
       </ReactFlow>
