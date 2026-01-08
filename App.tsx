@@ -46,6 +46,7 @@ const NodeAsHandleFlow = () => {
   const [empireWinning, setEmpireWinning] = useState(true);
   const [fuel, setFuel] = useState(10);
   // Start with music paused to comply with browser autoplay policies.
+  const [hasManuallyControlledMusic, setHasManuallyControlledMusic] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
   const visibleEdges = allEdges.filter(edge => {
@@ -152,13 +153,15 @@ const NodeAsHandleFlow = () => {
   }, visibleEdges);
 
   const startMusicOnInteraction = useCallback(() => {
-    // Start music on user interaction if it's not already playing.
-    if (!isMusicPlaying) {
+    // Start music on user interaction only if it hasn't been manually controlled yet.
+    if (!isMusicPlaying && !hasManuallyControlledMusic) {
       setIsMusicPlaying(true);
     }
-  }, [isMusicPlaying]);
+  }, [isMusicPlaying, hasManuallyControlledMusic]);
 
   const toggleMusic = useCallback(() => {
+    // Once the user toggles music manually, disable the auto-start feature.
+    setHasManuallyControlledMusic(true);
     setIsMusicPlaying(prev => !prev);
   }, []);
 
