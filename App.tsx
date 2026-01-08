@@ -23,10 +23,11 @@ import '@xyflow/react/dist/style.css';
 import SimpleFloatingEdge from './SimpleFloatingEdge';
 import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
-import Sidebar from './ui/Sidebar';
+import Sidebar from './ui/BottomMenu';
 import AudioPlayer from './AudioPlayer';
 
 import './global.css';
+import BottomMenu from './ui/BottomMenu';
 
 const nodeTypes = {
   custom: CustomNode,
@@ -184,12 +185,7 @@ const NodeAsHandleFlow = () => {
           <Background />
 
         </ReactFlow>      
-        <div className="bg-yellow-400 h-40 w-full">
-          <button onClick={toggleMusic} className="w-5 bg-gray-200/80 p-2 rounded text-black">
-              {isMusicPlaying ? 'Pause Music' : 'Play Music'}
-          </button>
-        </div>          
-
+        <BottomMenu toggleMusic={toggleMusic} isMusicPlaying={isMusicPlaying}  />       
     </div>
   );
 };
