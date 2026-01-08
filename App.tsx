@@ -13,7 +13,7 @@ import {
 
 import { initialNodes } from './lib/initial-nodes';
 import { initialEdges } from './lib/initial-edges';
-import { calculateDistance, possiblePaths } from './lib/actions';
+import { calculateDistance, detectFullPath, possiblePaths } from './lib/actions';
 
 import '@xyflow/react/dist/style.css';
 
@@ -40,8 +40,13 @@ const NodeAsHandleFlow = () => {
   const [allEdges, setAllEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [empireWinning, setEmpireWinning] = useState(true);
   const [fuel, setFuel] = useState(10);
-
-
+  const visibleEdges = allEdges.filter(edge => {
+    if (edge.id === '5-3' || edge.id === '3-5') {
+      return true;
+    }
+    const cost = edge.data?.label ? Number(edge.data.label) : Infinity;
+    return cost < fuel;
+  });
 
   useEffect(() => {
     const edgesWithCosts = allEdges.map((edge) => {
@@ -58,14 +63,6 @@ const NodeAsHandleFlow = () => {
     });
     setAllEdges(edgesWithCosts);
   }, [nodes, allEdges.length]);
-
-  const visibleEdges = allEdges.filter(edge => {
-    if (edge.id === '5-3' || edge.id === '3-5') {
-      return true;
-    }
-    const cost = edge.data?.label ? Number(edge.data.label) : Infinity;
-    return cost < fuel;
-  });
 
 
   useEffect(() => {
@@ -135,6 +132,12 @@ const NodeAsHandleFlow = () => {
       })
     );
   }, [empireWinning, setAllEdges, setNodes]);
+
+  useEffect(() => {
+    detectFullPath(visibleEdges) ? 
+    setEmpireWinning(false) :
+    setEmpireWinning(true)
+  }, visibleEdges);
 
   return (
     <div className="simple-floatingedges">
