@@ -9,6 +9,9 @@ import {
   ConnectionMode,
   type Edge,
   type Node,
+  Panel,
+  MiniMap,
+  Controls,
 } from '@xyflow/react';
 
 import { initialNodes } from './lib/initial-nodes';
@@ -102,7 +105,7 @@ const NodeAsHandleFlow = () => {
       type: 'custom',
       animated:true,
       data: {
-        label: '🚀 Rebels win!!!',
+        label: 'Rebels win!!!',
       }
     }
 
@@ -155,21 +158,26 @@ const NodeAsHandleFlow = () => {
   }, [isMusicPlaying, setIsMusicPlaying]);
 
   return (
-    <div className="simple-floatingedges">
+    <div className="simple-floatingedges flex flex-col h-screen">
       <AudioPlayer src="/star-wars-theme.mp3" isPlaying={isMusicPlaying} />
-      <ReactFlow
-        nodes={nodes}
-        edges={visibleEdges}
-        onNodesChange={onNodesChange}
-        onNodeDragStart={handleNodeDragStart}
-        edgeTypes={edgeTypes}
-        nodeTypes={nodeTypes}
-        fitView
-        fitViewOptions={fitViewOptions}
-        connectionMode={ConnectionMode.Loose}
-      >
-        <Background />
-      </ReactFlow>
+        <ReactFlow
+          nodes={nodes}
+          edges={visibleEdges}
+          onNodesChange={onNodesChange}
+          onNodeDragStart={handleNodeDragStart}
+          edgeTypes={edgeTypes}
+          nodeTypes={nodeTypes}
+          fitView
+          fitViewOptions={fitViewOptions}
+          connectionMode={ConnectionMode.Loose}
+        >
+          <Panel position="bottom-left">bottom-left</Panel>
+          <Controls showInteractive={false} />
+          <Background />
+
+        </ReactFlow>      
+        <div className="bg-yellow-400 h-4">
+        </div>
     </div>
   );
 };

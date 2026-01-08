@@ -6,7 +6,7 @@ export const initialNodes: Node[] = [
   {
     id: '1',
     position: { x: -300, y: 0 },
-    data: { label: 'Tatooine', handles: { right: true }, style: { width: 100, height: 100, borderColor: 'white', backgroundColor: '#646b69ff', color: 'white'} },
+    data: { label: 'Tatooine 🚀', handles: { right: true }, style: { width: 100, height: 100, borderColor: 'white', backgroundColor: '#646b69ff', color: 'white'} },
     type: 'custom'
   },
   {
